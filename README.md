@@ -1,187 +1,185 @@
-# 🏫 Dashboard Sekolah
+# 🏫 Dashboard Sekolah - Tutorial Instalasi & Penggunaan
 
-Modern school management dashboard built with Next.js 14 and TypeScript.
+Dashboard manajemen sekolah modern dengan sistem CRUD lengkap, built dengan Next.js 14 + TypeScript + Prisma.
 
-## ✨ Features
+## 🚀 Cara Install & Jalankan
 
-- 📊 **Analytics Dashboard** - Interactive charts and statistics
-- 👥 **Student Management** - Complete CRUD operations for student data  
-- 🏫 **Class Management** - Manage school classes and assignments
-- ⚠️ **Violation Tracking** - Track and manage student violations with detailed reporting
-- 🔐 **Authentication System** - Secure login and registration
-- 📱 **Responsive Design** - Works perfectly on all devices
+### 1. Clone Repository
+```bash
+git clone https://github.com/isaabdllah/Dashboard-Sekolah---Next-JS.git
+cd Dashboard-Sekolah---Next-JS
+```
+
+### 2. Install Dependencies
+```bash
+npm install
+```
+
+### 3. Setup Database
+```bash
+# Generate Prisma client
+npx prisma generate
+
+# Setup database (SQLite)
+npx prisma db push
+
+# Isi database dengan data sample
+npx prisma db seed
+```
+
+### 4. Jalankan Development Server
+```bash
+npm run dev
+```
+
+Buka [http://localhost:3000](http://localhost:3000) untuk melihat aplikasi! 🎉
+
+## 🔐 Login Credentials
+
+Setelah database di-seed, gunakan akun berikut untuk login:
+
+**Admin:**
+- Email: `admin@sekolah.com`
+- Password: `password123`
+
+**Guru:**
+- Email: `guru@sekolah.com`  
+- Password: `password123`
+
+## 📱 Fitur yang Tersedia
+
+### 🔑 Authentication
+- **Login**: `/auth/login` - Login dengan kredensial di atas
+- **Register**: `/auth/register` - Daftar akun baru
+
+### 📊 Dashboard
+- **Dashboard Utama**: `/dashboard` - Statistik dan charts real-time
+- **Manajemen Siswa**: `/dashboard/siswa` - CRUD siswa lengkap
+- **Manajemen Kelas**: `/dashboard/kelas` - CRUD kelas lengkap  
+- **Pelanggaran**: `/dashboard/pelanggaran` - Tracking pelanggaran siswa
+
+## ✨ Cara Menggunakan
+
+### 1. Login
+1. Buka `/auth/login`
+2. Masukkan email dan password admin
+3. Klik "Masuk"
+
+### 2. Dashboard
+- Lihat statistik real-time
+- Charts menampilkan data dari database
+- Klik "🔄 Refresh Data" untuk update charts
+
+### 3. Manajemen Siswa
+- **Tambah**: Klik "Tambah Siswa" → isi form → simpan
+- **Edit**: Klik ⋮ di tabel → "Edit" → ubah data → simpan
+- **Hapus**: Klik ⋮ di tabel → "Hapus" → konfirmasi
+- **Search**: Gunakan search box untuk cari siswa
+
+### 4. Manajemen Kelas
+- **Tambah**: Klik "Tambah Kelas" → isi form → simpan
+- **Edit**: Klik ⋮ di tabel → "Edit" → ubah data → simpan
+- **Hapus**: Klik ⋮ di tabel → "Hapus" → konfirmasi
+
+### 5. Pelanggaran
+- **Tambah**: Klik "Tambah Pelanggaran" → pilih siswa dari dropdown → isi form
+- **Edit**: Klik ⋮ di tabel → "Edit" → ubah data → simpan
+- **Detail**: Klik nama siswa untuk lihat detail pelanggaran
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: Next.js 14 (App Router) + TypeScript
-- **Styling**: Tailwind CSS + Shadcn/UI Components
-- **Charts**: Recharts for data visualization
-- **Icons**: Lucide React
-- **Form Handling**: React Hook Form + Zod validation
-- **Mock Data**: Frontend-only development setup
+- **Frontend**: Next.js 14 + TypeScript
+- **Database**: SQLite (development) / PostgreSQL (production)
+- **ORM**: Prisma
+- **UI**: Tailwind CSS + Shadcn/UI
+- **Charts**: Recharts
+- **Auth**: JWT + bcryptjs
 
-## 🚀 Quick Start
+## 📁 Struktur Project
+
+```
+app/
+├── api/              # Backend API Routes
+│   ├── auth/         # Login/Register endpoints
+│   ├── siswa/        # Siswa CRUD API
+│   ├── kelas/        # Kelas CRUD API
+│   └── pelanggaran/  # Pelanggaran CRUD API
+├── auth/             # Login/Register pages
+└── dashboard/        # Dashboard pages
+
+components/           # React Components
+├── Dashboard/        # Charts & analytics
+├── Siswa/           # Student management
+├── Kelas/           # Class management
+├── Pelanggaran/     # Violation tracking
+└── ui/              # UI components
+
+prisma/              # Database
+├── schema.prisma    # Database schema
+├── migrations/      # Database migrations
+└── seed.ts          # Sample data
+```
+
+## 🔧 Commands
 
 ```bash
-# Clone repository
-git clone https://github.com/isaabdllah/Dashboard-Sekolah---Next-JS.git
+# Development
+npm run dev          # Jalankan dev server
+npm run build        # Build untuk production
+npm start           # Jalankan production server
 
-# Navigate to project
-cd Dashboard-Sekolah---Next-JS
+# Database
+npx prisma studio    # Buka database viewer
+npx prisma db seed   # Isi ulang sample data
+npx prisma migrate dev  # Buat migration baru
+```
 
-# Install dependencies
+## 🗄️ Database Sample
+
+Setelah seed, database berisi:
+- **2 Users** (1 Admin, 1 Guru)
+- **3 Kelas** (X, XI, XII)
+- **8 Siswa** dengan data lengkap
+- **10 Pelanggaran** dengan berbagai jenis dan tingkat
+
+## 🐛 Troubleshooting
+
+### Error: Module not found
+```bash
+# Hapus node_modules dan install ulang
+rm -rf node_modules package-lock.json
 npm install
-
-# Run development server
-npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to view the dashboard.
-
-## 📁 Project Structure
-
-```
-app/                    # Next.js App Router pages
-├── auth/              # Authentication pages
-│   ├── login/
-│   └── register/
-├── dashboard/         # Main dashboard pages
-│   ├── kelas/        # Class management
-│   ├── siswa/        # Student management
-│   └── pelanggaran/  # Violation tracking
-components/            # Reusable React components
-├── Dashboard/         # Analytics components
-├── Kelas/            # Class management components
-├── Siswa/            # Student management components
-├── Pelanggaran/      # Violation components
-├── Layout/           # Layout components
-└── ui/               # UI component library (Shadcn/UI)
-lib/                  # Utilities and mock API
-```
-
-## 🎯 Available Pages
-
-### Authentication
-- `/auth/login` - Login page
-- `/auth/register` - Registration page
-
-### Dashboard
-- `/dashboard` - Main dashboard with analytics
-- `/dashboard/siswa` - Student management with CRUD operations
-- `/dashboard/kelas` - Class management system
-- `/dashboard/pelanggaran` - Violation tracking list
-- `/dashboard/pelanggaran/[id]` - Detailed violation view
-
-## 🧩 Key Components
-
-### Dashboard Analytics
-- **StatCard** - Display key statistics
-- **Charts** - 8 different chart types (Gender ratio, trends, distributions)
-- **Interactive Filters** - Real-time data filtering
-
-### Student Management
-- **Student Table** - Sortable and searchable student list
-- **Add/Edit Forms** - Complete student information forms
-- **Bulk Operations** - Import/export functionality
-
-### Violation System
-- **Violation Tracking** - Complete violation lifecycle
-- **Evidence Upload** - Support for file attachments
-- **Status Management** - Pending, In Progress, Completed
-
-## 📦 Dependencies
-
-```json
-{
-  "next": "14.0.0",
-  "react": "^18",
-  "typescript": "^5",
-  "tailwindcss": "^3.3.0",
-  "recharts": "^2.15.4",
-  "@radix-ui/react-*": "latest",
-  "lucide-react": "^0.294.0"
-}
-```
-
-## 🔧 Development Commands
-
+### Database error
 ```bash
-# Development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Start production server
-npm start
-
-# Type checking
-npm run type-check
-
-# Linting
-npm run lint
+# Reset database
+npx prisma db push --force-reset
+npx prisma db seed
 ```
 
-## 🎨 UI Components
-
-Built with **Shadcn/UI** for consistent and accessible design:
-- Buttons, Forms, Dialogs
-- Tables, Cards, Badges
-- Navigation, Dropdowns
-- Charts and Data Visualization
-
-## 📊 Mock Data
-
-The application includes comprehensive mock data for:
-- Student records (300+ entries)
-- Class information
-- Violation records with different severity levels
-- Analytics data for charts
-
-## 🚀 Deployment
-
-### Vercel (Recommended)
+### Port sudah digunakan
 ```bash
-# Install Vercel CLI
-npm i -g vercel
-
-# Deploy
-vercel
+# Gunakan port lain
+npm run dev -- -p 3001
 ```
 
-### Other Platforms
-The app can be deployed to any platform that supports Next.js:
-- Netlify
-- Railway
-- DigitalOcean App Platform
+## 📝 Cara Kontribusi
 
-## 🔄 Future Enhancements
+1. Fork repository ini
+2. Buat branch fitur baru: `git checkout -b feature/nama-fitur`
+3. Commit perubahan: `git commit -m "Tambah fitur xyz"`
+4. Push ke branch: `git push origin feature/nama-fitur`
+5. Buat Pull Request
 
-- [ ] Backend API integration
-- [ ] Real-time notifications
-- [ ] Advanced reporting system
-- [ ] Mobile app (React Native)
-- [ ] Multi-school support
-- [ ] Advanced user roles
+## 💡 Tips Development
 
-## 📝 License
-
-MIT License - see [LICENSE](LICENSE) file for details.
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open Pull Request
-
-## 💡 Support
-
-For support and questions:
-- Create an issue in the repository
-- Contact: [Your Email]
+- Database viewer: `npx prisma studio`
+- Lihat API responses di browser DevTools
+- Gunakan TypeScript untuk type safety
+- Test CRUD operations di berbagai browser
+- Cek responsive design di mobile
 
 ---
 
-**Built with ❤️ for modern school management**
+**Dashboard Sekolah - Sistem Manajemen Sekolah Modern** 🎓
