@@ -19,21 +19,54 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Badge } from "@/components/ui/badge"
 import { MoreHorizontal, Edit, Trash2, Eye } from "lucide-react"
-import { Pelanggaran } from "@/lib/api"
+import { Pelanggaran, api } from "@/lib/api"
 import { formatDate } from "@/lib/utils"
 import { EditPelanggaranDialog } from "./EditPelanggaranDialog"
 
 interface PelanggaranTableProps {
   data: Pelanggaran[]
+  onDataChanged?: () => void
 }
 
-export function PelanggaranTable({ data }: PelanggaranTableProps) {
-  const handleEdit = (id: string) => {
-    console.log("Edit pelanggaran:", id)
+export function PelanggaranTable({ data, onDataChanged }: PelanggaranTableProps) {
+  const [editPelanggaran, setEditPelanggaran] = useState<Pelanggaran | null>(null)
+  const [editOpen, setEditOpen] = useState(false)
+  const [deleteLoading, setDeleteLoading] = useState<string | null>(null)
+
+  const handleEdit = (pelanggaran: Pelanggaran) => {
+    setEditPelanggaran(pelanggaran)
+    setEditOpen(true)
   }
 
-  const handleDelete = (id: string) => {
-    console.log("Delete pelanggaran:", id)
+  const handleDelete = async (id: string) => {
+    if (!confirm('Apakah Anda yakin ingin menghapus pelanggaran ini?')) {
+      return
+    }
+
+    setDeleteLoading(id)
+    try {
+      await api.deletePelanggaran(id)
+      
+      // Refresh data
+      if (onDataChanged) {
+        onDataChanged()
+      }
+    } catch (error) {
+      console.error('Error deleting pelanggaran:', error)
+      alert('Gagal menghapus pelanggaran. Silakan coba lagi.')
+    } finally {
+      setDeleteLoading(null)
+    }
+  }
+
+  const handleEditSuccess = () => {
+    setEditOpen(false)
+    setEditPelanggaran(null)
+    
+    // Refresh data
+    if (onDataChanged) {
+      onDataChanged()
+    }
   }
 
   const getStatusColor = (status: string) => {
@@ -63,6 +96,7 @@ export function PelanggaranTable({ data }: PelanggaranTableProps) {
   }
 
   return (
+    <>
     <Table>
       <TableHeader>
         <TableRow>
@@ -80,7 +114,12 @@ export function PelanggaranTable({ data }: PelanggaranTableProps) {
           <TableRow key={pelanggaran.id}>
             <TableCell>{formatDate(pelanggaran.tanggal)}</TableCell>
             <TableCell className="font-medium">{pelanggaran.siswa.nama}</TableCell>
-            <TableCell>{pelanggaran.siswa.kelas}</TableCell>
+            <TableCell>
+              {typeof pelanggaran.siswa.kelas === 'string' 
+                ? pelanggaran.siswa.kelas 
+                : pelanggaran.siswa.kelas?.nama || '-'
+              }
+            </TableCell>
             <TableCell>{pelanggaran.jenisPelanggaran}</TableCell>
             <TableCell>
               <Badge className={getTingkatColor(pelanggaran.tingkatPelanggaran)}>
@@ -106,16 +145,17 @@ export function PelanggaranTable({ data }: PelanggaranTableProps) {
                       Lihat Detail
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => handleEdit(pelanggaran.id)}>
+                  <DropdownMenuItem onClick={() => handleEdit(pelanggaran)}>
                     <Edit className="mr-2 h-4 w-4" />
                     Edit
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => handleDelete(pelanggaran.id)}
                     className="text-red-600"
+                    disabled={deleteLoading === pelanggaran.id}
                   >
                     <Trash2 className="mr-2 h-4 w-4" />
-                    Hapus
+                    {deleteLoading === pelanggaran.id ? 'Menghapus...' : 'Hapus'}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -124,5 +164,13 @@ export function PelanggaranTable({ data }: PelanggaranTableProps) {
         ))}
       </TableBody>
     </Table>
+
+    <EditPelanggaranDialog
+      pelanggaran={editPelanggaran}
+      open={editOpen}
+      onOpenChange={setEditOpen}
+      onPelanggaranUpdated={handleEditSuccess}
+    />
+  </>
   )
 }

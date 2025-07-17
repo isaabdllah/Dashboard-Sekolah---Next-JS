@@ -17,25 +17,53 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { MoreHorizontal, Edit, Trash2 } from "lucide-react"
-import { Kelas } from "@/lib/api"
+import { Kelas, api } from "@/lib/api"
 import { EditKelasDialog } from "./EditKelasDialog"
 
 interface KelasTableProps {
   data: Kelas[]
+  onDataChanged?: () => void
 }
 
-export function KelasTable({ data }: KelasTableProps) {
+export function KelasTable({ data, onDataChanged }: KelasTableProps) {
   const [editKelas, setEditKelas] = useState<Kelas | null>(null)
   const [editOpen, setEditOpen] = useState(false)
+  const [deleteLoading, setDeleteLoading] = useState<string | null>(null)
 
   const handleEdit = (kelas: Kelas) => {
     setEditKelas(kelas)
     setEditOpen(true)
   }
 
-  const handleDelete = (id: string) => {
-    // Handle delete action
-    console.log("Delete kelas:", id)
+  const handleDelete = async (id: string) => {
+    if (!confirm('Apakah Anda yakin ingin menghapus kelas ini?')) {
+      return
+    }
+
+    setDeleteLoading(id)
+    try {
+      await api.deleteKelas(id)
+      
+      // Refresh data
+      if (onDataChanged) {
+        onDataChanged()
+      }
+    } catch (error) {
+      console.error('Error deleting kelas:', error)
+      alert('Gagal menghapus kelas. Silakan coba lagi.')
+    } finally {
+      setDeleteLoading(null)
+    }
+  }
+
+  const handleEditSuccess = () => {
+    setEditOpen(false)
+    setEditKelas(null)
+    
+    // Refresh data
+    if (onDataChanged) {
+      onDataChanged()
+    }
   }
 
   return (
@@ -72,9 +100,10 @@ export function KelasTable({ data }: KelasTableProps) {
                     <DropdownMenuItem
                       onClick={() => handleDelete(kelas.id)}
                       className="text-red-600"
+                      disabled={deleteLoading === kelas.id}
                     >
                       <Trash2 className="mr-2 h-4 w-4" />
-                      Hapus
+                      {deleteLoading === kelas.id ? 'Menghapus...' : 'Hapus'}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -88,6 +117,7 @@ export function KelasTable({ data }: KelasTableProps) {
         kelas={editKelas}
         open={editOpen}
         onOpenChange={setEditOpen}
+        onKelasUpdated={handleEditSuccess}
       />
     </>
   )

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -22,14 +22,85 @@ import {
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { Plus } from "lucide-react"
+import { api, Siswa } from "@/lib/api"
 
-export function AddPelanggaranDialog() {
+interface AddPelanggaranDialogProps {
+  onDataChanged?: () => void
+}
+
+export function AddPelanggaranDialog({ onDataChanged }: AddPelanggaranDialogProps) {
   const [open, setOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [siswaList, setSiswaList] = useState<Siswa[]>([])
+  const [formData, setFormData] = useState({
+    siswaId: '',
+    tanggal: '',
+    jenisPelanggaran: '',
+    tingkatPelanggaran: '',
+    deskripsi: '',
+    tindakan: '',
+    status: 'Pending'
+  })
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Fetch siswa data when dialog opens
+  useEffect(() => {
+    if (open) {
+      fetchSiswaData()
+    }
+  }, [open])
+
+  const fetchSiswaData = async () => {
+    try {
+      const response = await api.getSiswa()
+      setSiswaList(response)
+    } catch (error) {
+      console.error('Error fetching siswa:', error)
+    }
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle form submission here
-    setOpen(false)
+    
+    if (!formData.siswaId || !formData.tanggal || !formData.jenisPelanggaran || 
+        !formData.tingkatPelanggaran || !formData.deskripsi || !formData.tindakan) {
+      alert('Mohon lengkapi semua field yang wajib diisi')
+      return
+    }
+
+    setLoading(true)
+    try {
+      await api.createPelanggaran({
+        siswaId: formData.siswaId,
+        tanggal: formData.tanggal,
+        jenisPelanggaran: formData.jenisPelanggaran,
+        tingkatPelanggaran: formData.tingkatPelanggaran.toUpperCase() as 'RINGAN' | 'SEDANG' | 'BERAT',
+        deskripsi: formData.deskripsi,
+        tindakan: formData.tindakan,
+        status: formData.status.toUpperCase() as 'PENDING' | 'PROSES' | 'SELESAI'
+      })
+      
+      // Reset form and close dialog
+      setFormData({
+        siswaId: '',
+        tanggal: '',
+        jenisPelanggaran: '',
+        tingkatPelanggaran: '',
+        deskripsi: '',
+        tindakan: '',
+        status: 'Pending'
+      })
+      setOpen(false)
+      
+      // Trigger data refresh
+      if (onDataChanged) {
+        onDataChanged()
+      }
+    } catch (error) {
+      console.error('Error creating pelanggaran:', error)
+      alert('Gagal menambahkan pelanggaran')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -51,35 +122,39 @@ export function AddPelanggaranDialog() {
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="siswa" className="text-right">
-                Siswa
+                Siswa *
               </Label>
-              <Select>
+              <Select value={formData.siswaId} onValueChange={(value) => setFormData({...formData, siswaId: value})}>
                 <SelectTrigger className="col-span-3">
                   <SelectValue placeholder="Pilih siswa" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="1">Ahmad Fadli - X-A</SelectItem>
-                  <SelectItem value="2">Siti Nurhaliza - X-A</SelectItem>
-                  <SelectItem value="3">Budi Santoso - X-B</SelectItem>
+                  {siswaList.map((siswa) => (
+                    <SelectItem key={siswa.id} value={siswa.id}>
+                      {siswa.nama} - {siswa.nis} ({typeof siswa.kelas === 'string' ? siswa.kelas : siswa.kelas?.nama || 'No Class'})
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="tanggal" className="text-right">
-                Tanggal
+                Tanggal *
               </Label>
               <Input
                 id="tanggal"
                 type="date"
+                value={formData.tanggal}
+                onChange={(e) => setFormData({...formData, tanggal: e.target.value})}
                 className="col-span-3"
                 required
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="jenisPelanggaran" className="text-right">
-                Jenis Pelanggaran
+                Jenis Pelanggaran *
               </Label>
-              <Select>
+              <Select value={formData.jenisPelanggaran} onValueChange={(value) => setFormData({...formData, jenisPelanggaran: value})}>
                 <SelectTrigger className="col-span-3">
                   <SelectValue placeholder="Pilih jenis pelanggaran" />
                 </SelectTrigger>
@@ -95,9 +170,9 @@ export function AddPelanggaranDialog() {
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="tingkatPelanggaran" className="text-right">
-                Tingkat
+                Tingkat *
               </Label>
-              <Select>
+              <Select value={formData.tingkatPelanggaran} onValueChange={(value) => setFormData({...formData, tingkatPelanggaran: value})}>
                 <SelectTrigger className="col-span-3">
                   <SelectValue placeholder="Pilih tingkat pelanggaran" />
                 </SelectTrigger>
@@ -110,22 +185,26 @@ export function AddPelanggaranDialog() {
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="deskripsi" className="text-right">
-                Deskripsi
+                Deskripsi *
               </Label>
               <Textarea
                 id="deskripsi"
                 placeholder="Jelaskan detail pelanggaran"
+                value={formData.deskripsi}
+                onChange={(e) => setFormData({...formData, deskripsi: e.target.value})}
                 className="col-span-3"
                 required
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="tindakan" className="text-right">
-                Tindakan
+                Tindakan *
               </Label>
               <Textarea
                 id="tindakan"
                 placeholder="Tindakan yang diambil"
+                value={formData.tindakan}
+                onChange={(e) => setFormData({...formData, tindakan: e.target.value})}
                 className="col-span-3"
                 required
               />
@@ -134,7 +213,7 @@ export function AddPelanggaranDialog() {
               <Label htmlFor="status" className="text-right">
                 Status
               </Label>
-              <Select>
+              <Select value={formData.status} onValueChange={(value) => setFormData({...formData, status: value})}>
                 <SelectTrigger className="col-span-3">
                   <SelectValue placeholder="Pilih status" />
                 </SelectTrigger>
@@ -150,7 +229,9 @@ export function AddPelanggaranDialog() {
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>
               Batal
             </Button>
-            <Button type="submit">Simpan</Button>
+            <Button type="submit" disabled={loading}>
+              {loading ? 'Menyimpan...' : 'Simpan'}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

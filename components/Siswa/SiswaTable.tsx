@@ -18,30 +18,59 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Badge } from "@/components/ui/badge"
 import { MoreHorizontal, Edit, Trash2, Eye } from "lucide-react"
-import { Siswa } from "@/lib/api"
+import { Siswa, api } from "@/lib/api"
+import { DeleteDialog } from "@/components/Layout/DeleteDialog"
 import { EditSiswaDialog } from "./EditSiswaDialog"
 
 interface SiswaTableProps {
   data: Siswa[]
+  onDataChanged?: () => void // Add callback for data refresh
 }
 
-export function SiswaTable({ data }: SiswaTableProps) {
+export function SiswaTable({ data, onDataChanged }: SiswaTableProps) {
   const [editSiswa, setEditSiswa] = useState<Siswa | null>(null)
   const [editOpen, setEditOpen] = useState(false)
+  const [deleteLoading, setDeleteLoading] = useState<string | null>(null)
 
   const handleEdit = (siswa: Siswa) => {
     setEditSiswa(siswa)
     setEditOpen(true)
   }
 
-  const handleDelete = (id: string) => {
-    // Handle delete action
-    console.log("Delete siswa:", id)
+  const handleDelete = async (id: string) => {
+    if (!confirm('Apakah Anda yakin ingin menghapus siswa ini?')) {
+      return
+    }
+
+    setDeleteLoading(id)
+    try {
+      await api.deleteSiswa(id)
+      
+      // Refresh data
+      if (onDataChanged) {
+        onDataChanged()
+      }
+    } catch (error) {
+      console.error('Error deleting siswa:', error)
+      alert('Gagal menghapus siswa. Silakan coba lagi.')
+    } finally {
+      setDeleteLoading(null)
+    }
   }
 
   const handleView = (id: string) => {
     // Handle view action
     console.log("View siswa:", id)
+  }
+
+  const handleEditSuccess = () => {
+    setEditOpen(false)
+    setEditSiswa(null)
+    
+    // Refresh data
+    if (onDataChanged) {
+      onDataChanged()
+    }
   }
 
   return (
@@ -63,7 +92,9 @@ export function SiswaTable({ data }: SiswaTableProps) {
             <TableRow key={siswa.id}>
               <TableCell className="font-medium">{siswa.nis}</TableCell>
               <TableCell>{siswa.nama}</TableCell>
-              <TableCell>{siswa.kelas}</TableCell>
+              <TableCell>
+                {typeof siswa.kelas === 'string' ? siswa.kelas : siswa.kelas?.nama || '-'}
+              </TableCell>
               <TableCell>
                 <Badge variant={siswa.jenisKelamin === 'L' ? 'default' : 'secondary'}>
                   {siswa.jenisKelamin === 'L' ? 'Laki-laki' : 'Perempuan'}
@@ -90,9 +121,10 @@ export function SiswaTable({ data }: SiswaTableProps) {
                     <DropdownMenuItem
                       onClick={() => handleDelete(siswa.id)}
                       className="text-red-600"
+                      disabled={deleteLoading === siswa.id}
                     >
                       <Trash2 className="mr-2 h-4 w-4" />
-                      Hapus
+                      {deleteLoading === siswa.id ? 'Menghapus...' : 'Hapus'}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -106,6 +138,7 @@ export function SiswaTable({ data }: SiswaTableProps) {
         siswa={editSiswa}
         open={editOpen}
         onOpenChange={setEditOpen}
+        onSiswaUpdated={handleEditSuccess}
       />
     </>
   )

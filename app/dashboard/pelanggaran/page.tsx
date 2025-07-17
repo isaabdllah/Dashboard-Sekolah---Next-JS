@@ -16,19 +16,19 @@ export default function PelanggaranPage() {
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
 
-  useEffect(() => {
-    const loadPelanggaran = async () => {
-      try {
-        const data = await api.getPelanggaran()
-        setPelanggaran(data)
-        setFilteredPelanggaran(data)
-      } catch (error) {
-        console.error("Error loading pelanggaran:", error)
-      } finally {
-        setLoading(false)
-      }
+  const loadPelanggaran = async () => {
+    try {
+      const data = await api.getPelanggaran()
+      setPelanggaran(data)
+      setFilteredPelanggaran(data)
+    } catch (error) {
+      console.error("Error loading pelanggaran:", error)
+    } finally {
+      setLoading(false)
     }
+  }
 
+  useEffect(() => {
     loadPelanggaran()
   }, [])
 
@@ -37,13 +37,17 @@ export default function PelanggaranPage() {
       p.siswa.nama.toLowerCase().includes(searchTerm.toLowerCase()) ||
       p.siswa.nis.includes(searchTerm) ||
       p.jenisPelanggaran.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.siswa.kelas.toLowerCase().includes(searchTerm.toLowerCase())
+      (typeof p.siswa.kelas === 'string' 
+        ? p.siswa.kelas.toLowerCase().includes(searchTerm.toLowerCase())
+        : p.siswa.kelas?.nama?.toLowerCase().includes(searchTerm.toLowerCase())
+      )
     )
     setFilteredPelanggaran(filtered)
   }, [searchTerm, pelanggaran])
 
   const handleAddPelanggaran = () => {
-    console.log("Add pelanggaran")
+    // This function is now handled by the AddPelanggaranDialog component
+    loadPelanggaran() // Refresh data after adding
   }
 
   const handleFilter = () => {
@@ -79,7 +83,7 @@ export default function PelanggaranPage() {
               <Download className="mr-2 h-4 w-4" />
               Export
             </Button>
-            <AddPelanggaranDialog />
+            <AddPelanggaranDialog onDataChanged={loadPelanggaran} />
           </div>
         </div>
 
@@ -106,7 +110,7 @@ export default function PelanggaranPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <PelanggaranTable data={filteredPelanggaran} />
+            <PelanggaranTable data={filteredPelanggaran} onDataChanged={loadPelanggaran} />
           </CardContent>
         </Card>
       </div>

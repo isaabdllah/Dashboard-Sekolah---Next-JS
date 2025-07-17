@@ -1,263 +1,247 @@
-// Mock API functions for frontend-only implementation
+// Real API functions for full-stack implementation
 
+const API_BASE = '/api'
+
+// Types
 export interface Siswa {
   id: string
   nama: string
   nis: string
-  kelas: string
+  kelas: Kelas | string
   jenisKelamin: 'L' | 'P'
-  tanggalLahir: string
+  tanggalLahir: string | Date
   alamat: string
   telepon: string
   email: string
+  kelasId: string
+  pelanggaran?: Pelanggaran[]
+  createdAt?: string | Date
+  updatedAt?: string | Date
+}
+
+export interface CreateSiswaRequest {
+  nama: string
+  nis: string
+  jenisKelamin: 'L' | 'P'
+  tanggalLahir: Date
+  alamat: string
+  telepon: string
+  email: string
+  kelasId: string
+}
+
+export interface UpdateSiswaRequest {
+  nama?: string
+  nis?: string
+  jenisKelamin?: 'L' | 'P'
+  tanggalLahir?: Date
+  alamat?: string
+  telepon?: string
+  email?: string
+  kelasId?: string
 }
 
 export interface Kelas {
   id: string
   nama: string
   tingkat: string
-  jurusan: string
+  jurusan?: string
   waliKelas: string
-  jumlahSiswa: number
+  jumlahSiswa?: number
+  siswa?: Siswa[]
+  createdAt?: string | Date
+  updatedAt?: string | Date
 }
 
 export interface Pelanggaran {
   id: string
   siswaId: string
   siswa: Siswa
-  tanggal: string
+  tanggal: string | Date
   jenisPelanggaran: string
-  tingkatPelanggaran: 'Ringan' | 'Sedang' | 'Berat'
+  tingkatPelanggaran: 'RINGAN' | 'SEDANG' | 'BERAT'
   deskripsi: string
-  bukti?: string
-  tindakan: string
-  status: 'Belum Ditindak' | 'Sudah Ditindak'
+  buktiUrl?: string
+  tindakan?: string
+  status: 'PENDING' | 'PROSES' | 'SELESAI'
+  createdAt?: string | Date
+  updatedAt?: string | Date
 }
 
-// Mock data
-const mockSiswa: Siswa[] = [
-  {
-    id: '1',
-    nama: 'Ahmad Rizki',
-    nis: '2023001',
-    kelas: 'XII IPA 1',
-    jenisKelamin: 'L',
-    tanggalLahir: '2005-03-15',
-    alamat: 'Jl. Merdeka No. 10',
-    telepon: '081234567890',
-    email: 'ahmad.rizki@email.com'
-  },
-  {
-    id: '2',
-    nama: 'Siti Nurhaliza',
-    nis: '2023002',
-    kelas: 'XII IPA 1',
-    jenisKelamin: 'P',
-    tanggalLahir: '2005-07-22',
-    alamat: 'Jl. Sudirman No. 25',
-    telepon: '081234567891',
-    email: 'siti.nurhaliza@email.com'
-  },
-  {
-    id: '3',
-    nama: 'Budi Santoso',
-    nis: '2023003',
-    kelas: 'XI IPS 2',
-    jenisKelamin: 'L',
-    tanggalLahir: '2006-01-10',
-    alamat: 'Jl. Pahlawan No. 5',
-    telepon: '081234567892',
-    email: 'budi.santoso@email.com'
-  }
-]
+export interface User {
+  id: string
+  name: string
+  email: string
+  role: 'ADMIN' | 'GURU'
+  createdAt?: string | Date
+  updatedAt?: string | Date
+}
 
-const mockKelas: Kelas[] = [
-  {
-    id: '1',
-    nama: 'XII IPA 1',
-    tingkat: 'XII',
-    jurusan: 'IPA',
-    waliKelas: 'Pak Agus',
-    jumlahSiswa: 32
-  },
-  {
-    id: '2',
-    nama: 'XI IPS 2',
-    tingkat: 'XI',
-    jurusan: 'IPS',
-    waliKelas: 'Bu Sari',
-    jumlahSiswa: 28
-  },
-  {
-    id: '3',
-    nama: 'X MIPA 1',
-    tingkat: 'X',
-    jurusan: 'MIPA',
-    waliKelas: 'Pak Budi',
-    jumlahSiswa: 30
+export interface DashboardStats {
+  overview: {
+    totalSiswa: number
+    totalKelas: number
+    totalPelanggaran: number
+    totalUser: number
+    pelanggaranBulanIni: number
   }
-]
+  genderDistribution: Array<{
+    jenisKelamin: 'L' | 'P'
+    count: number
+  }>
+  violationLevelDistribution: Array<{
+    tingkat: 'RINGAN' | 'SEDANG' | 'BERAT'
+    count: number
+  }>
+  violationStatusDistribution: Array<{
+    status: 'PENDING' | 'PROSES' | 'SELESAI'
+    count: number
+  }>
+  classDistribution: Array<{
+    nama: string
+    tingkat: string
+    jurusan?: string
+    jumlahSiswa: number
+  }>
+  recentViolations: Array<{
+    id: string
+    tanggal: string | Date
+    jenisPelanggaran: string
+    tingkatPelanggaran: string
+    status: string
+    siswa: {
+      nama: string
+      nis: string
+      kelas: string
+    }
+  }>
+}
 
-const mockPelanggaran: Pelanggaran[] = [
-  {
-    id: '1',
-    siswaId: '1',
-    siswa: mockSiswa[0],
-    tanggal: '2024-01-15',
-    jenisPelanggaran: 'Terlambat',
-    tingkatPelanggaran: 'Ringan',
-    deskripsi: 'Terlambat masuk kelas 15 menit',
-    tindakan: 'Teguran lisan',
-    status: 'Sudah Ditindak'
-  },
-  {
-    id: '2',
-    siswaId: '2',
-    siswa: mockSiswa[1],
-    tanggal: '2024-01-16',
-    jenisPelanggaran: 'Tidak mengerjakan PR',
-    tingkatPelanggaran: 'Sedang',
-    deskripsi: 'Tidak mengerjakan PR Matematika',
-    tindakan: 'Mengerjakan PR di sekolah',
-    status: 'Sudah Ditindak'
-  },
-  {
-    id: '3',
-    siswaId: '3',
-    siswa: mockSiswa[2],
-    tanggal: '2024-01-17',
-    jenisPelanggaran: 'Berkelahi',
-    tingkatPelanggaran: 'Berat',
-    deskripsi: 'Berkelahi dengan teman sekelas',
-    tindakan: 'Panggil orang tua',
-    status: 'Belum Ditindak'
+// Helper function for API calls
+async function fetchAPI(endpoint: string, options?: RequestInit) {
+  const url = `${API_BASE}${endpoint}`
+  const response = await fetch(url, {
+    headers: {
+      'Content-Type': 'application/json',
+      ...options?.headers,
+    },
+    ...options,
+  })
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({ error: 'Network error' }))
+    throw new Error(errorData.error || `HTTP error! status: ${response.status}`)
   }
-]
+
+  return response.json()
+}
 
 // API functions
 export const api = {
+  // Authentication
+  login: async (email: string, password: string) => {
+    return fetchAPI('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+    })
+  },
+
+  register: async (userData: { name: string; email: string; password: string; role?: string }) => {
+    return fetchAPI('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify(userData),
+    })
+  },
+
   // Siswa
   getSiswa: async (): Promise<Siswa[]> => {
-    await new Promise(resolve => setTimeout(resolve, 500))
-    return mockSiswa
+    return fetchAPI('/siswa')
   },
   
-  getSiswaById: async (id: string): Promise<Siswa | null> => {
-    await new Promise(resolve => setTimeout(resolve, 300))
-    return mockSiswa.find(s => s.id === id) || null
+  getSiswaById: async (id: string): Promise<Siswa> => {
+    return fetchAPI(`/siswa/${id}`)
   },
   
-  createSiswa: async (siswa: Omit<Siswa, 'id'>): Promise<Siswa> => {
-    await new Promise(resolve => setTimeout(resolve, 500))
-    const newSiswa = { ...siswa, id: Date.now().toString() }
-    mockSiswa.push(newSiswa)
-    return newSiswa
+  createSiswa: async (siswa: CreateSiswaRequest): Promise<Siswa> => {
+    return fetchAPI('/siswa', {
+      method: 'POST',
+      body: JSON.stringify(siswa),
+    })
   },
   
-  updateSiswa: async (id: string, siswa: Partial<Siswa>): Promise<Siswa> => {
-    await new Promise(resolve => setTimeout(resolve, 500))
-    const index = mockSiswa.findIndex(s => s.id === id)
-    if (index !== -1) {
-      mockSiswa[index] = { ...mockSiswa[index], ...siswa }
-      return mockSiswa[index]
-    }
-    throw new Error('Siswa not found')
+  updateSiswa: async (id: string, siswa: UpdateSiswaRequest): Promise<Siswa> => {
+    return fetchAPI(`/siswa/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(siswa),
+    })
   },
   
   deleteSiswa: async (id: string): Promise<void> => {
-    await new Promise(resolve => setTimeout(resolve, 500))
-    const index = mockSiswa.findIndex(s => s.id === id)
-    if (index !== -1) {
-      mockSiswa.splice(index, 1)
-    }
+    return fetchAPI(`/siswa/${id}`, {
+      method: 'DELETE',
+    })
   },
 
   // Kelas
   getKelas: async (): Promise<Kelas[]> => {
-    await new Promise(resolve => setTimeout(resolve, 500))
-    return mockKelas
+    return fetchAPI('/kelas')
   },
   
-  createKelas: async (kelas: Omit<Kelas, 'id'>): Promise<Kelas> => {
-    await new Promise(resolve => setTimeout(resolve, 500))
-    const newKelas = { ...kelas, id: Date.now().toString() }
-    mockKelas.push(newKelas)
-    return newKelas
+  getKelasById: async (id: string): Promise<Kelas> => {
+    return fetchAPI(`/kelas/${id}`)
+  },
+  
+  createKelas: async (kelas: Omit<Kelas, 'id' | 'createdAt' | 'updatedAt'>): Promise<Kelas> => {
+    return fetchAPI('/kelas', {
+      method: 'POST',
+      body: JSON.stringify(kelas),
+    })
   },
   
   updateKelas: async (id: string, kelas: Partial<Kelas>): Promise<Kelas> => {
-    await new Promise(resolve => setTimeout(resolve, 500))
-    const index = mockKelas.findIndex(k => k.id === id)
-    if (index !== -1) {
-      mockKelas[index] = { ...mockKelas[index], ...kelas }
-      return mockKelas[index]
-    }
-    throw new Error('Kelas not found')
+    return fetchAPI(`/kelas/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(kelas),
+    })
   },
   
   deleteKelas: async (id: string): Promise<void> => {
-    await new Promise(resolve => setTimeout(resolve, 500))
-    const index = mockKelas.findIndex(k => k.id === id)
-    if (index !== -1) {
-      mockKelas.splice(index, 1)
-    }
+    return fetchAPI(`/kelas/${id}`, {
+      method: 'DELETE',
+    })
   },
 
   // Pelanggaran
   getPelanggaran: async (): Promise<Pelanggaran[]> => {
-    await new Promise(resolve => setTimeout(resolve, 500))
-    return mockPelanggaran
+    return fetchAPI('/pelanggaran')
   },
   
-  getPelanggaranById: async (id: string): Promise<Pelanggaran | null> => {
-    await new Promise(resolve => setTimeout(resolve, 300))
-    return mockPelanggaran.find(p => p.id === id) || null
+  getPelanggaranById: async (id: string): Promise<Pelanggaran> => {
+    return fetchAPI(`/pelanggaran/${id}`)
   },
   
-  createPelanggaran: async (pelanggaran: Omit<Pelanggaran, 'id' | 'siswa'>): Promise<Pelanggaran> => {
-    await new Promise(resolve => setTimeout(resolve, 500))
-    const siswa = mockSiswa.find(s => s.id === pelanggaran.siswaId)
-    if (!siswa) throw new Error('Siswa not found')
-    
-    const newPelanggaran = { 
-      ...pelanggaran, 
-      id: Date.now().toString(),
-      siswa 
-    }
-    mockPelanggaran.push(newPelanggaran)
-    return newPelanggaran
+  createPelanggaran: async (pelanggaran: Omit<Pelanggaran, 'id' | 'siswa' | 'createdAt' | 'updatedAt'>): Promise<Pelanggaran> => {
+    return fetchAPI('/pelanggaran', {
+      method: 'POST',
+      body: JSON.stringify(pelanggaran),
+    })
   },
   
   updatePelanggaran: async (id: string, pelanggaran: Partial<Pelanggaran>): Promise<Pelanggaran> => {
-    await new Promise(resolve => setTimeout(resolve, 500))
-    const index = mockPelanggaran.findIndex(p => p.id === id)
-    if (index !== -1) {
-      mockPelanggaran[index] = { ...mockPelanggaran[index], ...pelanggaran }
-      return mockPelanggaran[index]
-    }
-    throw new Error('Pelanggaran not found')
+    return fetchAPI(`/pelanggaran/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(pelanggaran),
+    })
   },
   
   deletePelanggaran: async (id: string): Promise<void> => {
-    await new Promise(resolve => setTimeout(resolve, 500))
-    const index = mockPelanggaran.findIndex(p => p.id === id)
-    if (index !== -1) {
-      mockPelanggaran.splice(index, 1)
-    }
+    return fetchAPI(`/pelanggaran/${id}`, {
+      method: 'DELETE',
+    })
   },
 
   // Dashboard Stats
-  getDashboardStats: async () => {
-    await new Promise(resolve => setTimeout(resolve, 500))
-    return {
-      totalSiswa: mockSiswa.length,
-      totalKelas: mockKelas.length,
-      totalPelanggaran: mockPelanggaran.length,
-      pelanggaranBulanIni: mockPelanggaran.filter(p => {
-        const date = new Date(p.tanggal)
-        const now = new Date()
-        return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear()
-      }).length
-    }
-  }
+  getDashboardStats: async (): Promise<any> => {
+    return fetchAPI('/dashboard/stats')
+  },
 }

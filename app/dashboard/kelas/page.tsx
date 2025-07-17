@@ -11,18 +11,18 @@ export default function KelasPage() {
   const [kelas, setKelas] = useState<Kelas[]>([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    const loadKelas = async () => {
-      try {
-        const data = await api.getKelas()
-        setKelas(data)
-      } catch (error) {
-        console.error("Error loading kelas:", error)
-      } finally {
-        setLoading(false)
-      }
+  const loadKelas = async () => {
+    try {
+      const data = await api.getKelas()
+      setKelas(data)
+    } catch (error) {
+      console.error("Error loading kelas:", error)
+    } finally {
+      setLoading(false)
     }
+  }
 
+  useEffect(() => {
     loadKelas()
   }, [])
 
@@ -46,7 +46,7 @@ export default function KelasPage() {
               Kelola data kelas dan wali kelas.
             </p>
           </div>
-          <AddKelasDialog />
+          <AddKelasDialog onKelasAdded={loadKelas} />
         </div>
 
         <Card>
@@ -57,7 +57,7 @@ export default function KelasPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <KelasTable data={kelas} />
+            <KelasTable data={kelas} onDataChanged={loadKelas} />
           </CardContent>
         </Card>
       </div>

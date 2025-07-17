@@ -1,15 +1,72 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
+import { api } from "@/lib/api"
 
-const data = [
-  { tingkat: "Ringan", jumlah: 25 },
-  { tingkat: "Sedang", jumlah: 15 },
-  { tingkat: "Berat", jumlah: 5 },
-]
+interface ViolationLevelData {
+  tingkat: string
+  jumlah: number
+}
 
-export function TingkatPelanggaran() {
+interface TingkatPelanggaranProps {
+  refreshKey?: number
+}
+
+export function TingkatPelanggaran({ refreshKey }: TingkatPelanggaranProps) {
+  const [data, setData] = useState<ViolationLevelData[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const stats = await api.getDashboardStats()
+        // Use real violation level distribution data from API
+        const levelData = stats.violationLevelDistribution?.map((item: any) => ({
+          tingkat: item.tingkat,
+          jumlah: item.count
+        })) || []
+
+        // Ensure all levels are represented (even with 0 counts)
+        const allLevels = ['RINGAN', 'SEDANG', 'BERAT']
+        const completeData = allLevels.map(level => {
+          const existing = levelData.find((item: ViolationLevelData) => item.tingkat === level)
+          return existing || { tingkat: level, jumlah: 0 }
+        })
+
+        setData(completeData)
+      } catch (error) {
+        console.error('Error fetching violation level data:', error)
+        // Fallback data
+        setData([
+          { tingkat: "RINGAN", jumlah: 0 },
+          { tingkat: "SEDANG", jumlah: 0 },
+          { tingkat: "BERAT", jumlah: 0 }
+        ])
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [refreshKey])
+
+  if (loading) {
+    return (
+      <Card className="col-span-3">
+        <CardHeader>
+          <CardTitle>Tingkat Pelanggaran</CardTitle>
+          <CardDescription>Loading...</CardDescription>
+        </CardHeader>
+        <CardContent className="pl-2">
+          <div className="h-[300px] flex items-center justify-center">
+            <div>Loading chart data...</div>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
   return (
     <Card className="col-span-3">
       <CardHeader>

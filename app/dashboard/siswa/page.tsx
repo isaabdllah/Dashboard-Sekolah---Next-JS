@@ -6,8 +6,9 @@ import { AddSiswaDialog } from "@/components/Siswa/AddSiswaDialog"
 import { SiswaTable } from "@/components/Siswa/SiswaTable"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Search, Download } from "lucide-react"
 import { api, Siswa } from "@/lib/api"
-import { Search } from "lucide-react"
 
 export default function SiswaPage() {
   const [siswa, setSiswa] = useState<Siswa[]>([])
@@ -15,19 +16,19 @@ export default function SiswaPage() {
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
 
-  useEffect(() => {
-    const loadSiswa = async () => {
-      try {
-        const data = await api.getSiswa()
-        setSiswa(data)
-        setFilteredSiswa(data)
-      } catch (error) {
-        console.error("Error loading siswa:", error)
-      } finally {
-        setLoading(false)
-      }
+  const loadSiswa = async () => {
+    try {
+      const data = await api.getSiswa()
+      setSiswa(data)
+      setFilteredSiswa(data)
+    } catch (error) {
+      console.error("Error loading siswa:", error)
+    } finally {
+      setLoading(false)
     }
+  }
 
+  useEffect(() => {
     loadSiswa()
   }, [])
 
@@ -35,7 +36,10 @@ export default function SiswaPage() {
     const filtered = siswa.filter(s =>
       s.nama.toLowerCase().includes(searchTerm.toLowerCase()) ||
       s.nis.includes(searchTerm) ||
-      s.kelas.toLowerCase().includes(searchTerm.toLowerCase())
+      (typeof s.kelas === 'string' 
+        ? s.kelas.toLowerCase().includes(searchTerm.toLowerCase())
+        : s.kelas?.nama?.toLowerCase().includes(searchTerm.toLowerCase())
+      )
     )
     setFilteredSiswa(filtered)
   }, [searchTerm, siswa])
@@ -60,7 +64,7 @@ export default function SiswaPage() {
               Kelola data siswa dan informasi akademik.
             </p>
           </div>
-          <AddSiswaDialog />
+          <AddSiswaDialog onSiswaAdded={loadSiswa} />
         </div>
 
         <Card>
@@ -80,7 +84,7 @@ export default function SiswaPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <SiswaTable data={filteredSiswa} />
+            <SiswaTable data={filteredSiswa} onDataChanged={loadSiswa} />
           </CardContent>
         </Card>
       </div>

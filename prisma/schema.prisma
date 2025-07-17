@@ -1,0 +1,85 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  password  String
+  role      Role     @default(ADMIN)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Siswa {
+  id           String        @id @default(cuid())
+  nis          String        @unique
+  nama         String
+  jenisKelamin JenisKelamin
+  tanggalLahir DateTime
+  alamat       String
+  telepon      String
+  email        String        @unique
+  kelasId      String
+  kelas        Kelas         @relation(fields: [kelasId], references: [id])
+  pelanggaran  Pelanggaran[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Kelas {
+  id        String   @id @default(cuid())
+  nama      String   @unique
+  tingkat   String
+  jurusan   String?
+  waliKelas String
+  siswa     Siswa[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Pelanggaran {
+  id                 String             @id @default(cuid())
+  siswaId            String
+  siswa              Siswa              @relation(fields: [siswaId], references: [id])
+  tanggal            DateTime
+  jenisPelanggaran   String
+  tingkatPelanggaran TingkatPelanggaran
+  deskripsi          String
+  tindakan           String?
+  status             StatusPelanggaran  @default(PENDING)
+  buktiUrl           String?
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+}
+
+enum Role {
+  ADMIN
+  GURU
+}
+
+enum JenisKelamin {
+  L
+  P
+}
+
+enum TingkatPelanggaran {
+  RINGAN
+  SEDANG
+  BERAT
+}
+
+enum StatusPelanggaran {
+  PENDING
+  PROSES
+  SELESAI
+}

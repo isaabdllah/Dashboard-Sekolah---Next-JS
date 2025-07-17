@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { api } from '@/lib/api'
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -14,12 +15,36 @@ export default function RegisterPage() {
     password: '',
     confirmPassword: ''
   })
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
   const router = useRouter()
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Mock register - redirect to login
-    router.push('/auth/login')
+    setLoading(true)
+    setError('')
+
+    if (formData.password !== formData.confirmPassword) {
+      setError('Password dan konfirmasi password tidak sama')
+      setLoading(false)
+      return
+    }
+
+    try {
+      await api.register({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password
+      })
+      
+      // Redirect to login with success message
+      router.push('/auth/login')
+    } catch (error: any) {
+      console.error('Register error:', error)
+      setError(error.message || 'Registrasi gagal. Silakan coba lagi.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,6 +65,11 @@ export default function RegisterPage() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
+            {error && (
+              <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
+                {error}
+              </div>
+            )}
             <div className="space-y-2">
               <Label htmlFor="name">Nama Lengkap</Label>
               <Input
@@ -50,6 +80,7 @@ export default function RegisterPage() {
                 value={formData.name}
                 onChange={handleChange}
                 required
+                disabled={loading}
               />
             </div>
             <div className="space-y-2">
@@ -62,6 +93,7 @@ export default function RegisterPage() {
                 value={formData.email}
                 onChange={handleChange}
                 required
+                disabled={loading}
               />
             </div>
             <div className="space-y-2">
@@ -74,6 +106,7 @@ export default function RegisterPage() {
                 value={formData.password}
                 onChange={handleChange}
                 required
+                disabled={loading}
               />
             </div>
             <div className="space-y-2">
@@ -86,16 +119,18 @@ export default function RegisterPage() {
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 required
+                disabled={loading}
               />
             </div>
-            <Button type="submit" className="w-full">
-              Daftar
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? 'Mendaftar...' : 'Daftar'}
             </Button>
             <div className="text-center">
               <Button 
                 type="button" 
                 variant="link" 
                 onClick={() => router.push('/auth/login')}
+                disabled={loading}
               >
                 Sudah punya akun? Login
               </Button>

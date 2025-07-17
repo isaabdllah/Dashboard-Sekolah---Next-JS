@@ -28,7 +28,7 @@ export function InfoSiswa({ pelanggaran }: InfoSiswaProps) {
           </div>
           <div>
             <p className="text-sm font-medium text-gray-500">Kelas</p>
-            <p className="text-base">{siswa.kelas}</p>
+            <p className="text-base">{typeof siswa.kelas === 'string' ? siswa.kelas : siswa.kelas?.nama || 'N/A'}</p>
           </div>
           <div>
             <p className="text-sm font-medium text-gray-500">Jenis Kelamin</p>

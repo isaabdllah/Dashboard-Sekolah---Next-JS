@@ -21,7 +21,7 @@ export function BuktiPelanggaran({ pelanggaran }: BuktiPelanggaranProps) {
         <CardTitle>Bukti Pelanggaran</CardTitle>
       </CardHeader>
       <CardContent>
-        {pelanggaran.bukti ? (
+        {pelanggaran.buktiUrl ? (
           <div className="space-y-4">
             <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
               <ImageIcon className="mx-auto h-12 w-12 text-gray-400" />
@@ -29,7 +29,7 @@ export function BuktiPelanggaran({ pelanggaran }: BuktiPelanggaranProps) {
                 Bukti pelanggaran tersedia
               </p>
               <p className="text-xs text-gray-400 mt-1">
-                {pelanggaran.bukti}
+                              <p>URL: {pelanggaran.buktiUrl}</p>
               </p>
             </div>
             <Button onClick={handleDownload} variant="outline" className="w-full">
