@@ -1,0 +1,162 @@
+"use client"
+
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
+import { Plus } from "lucide-react"
+
+export function AddSiswaDialog() {
+  const [open, setOpen] = useState(false)
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    // Handle form submission here
+    setOpen(false)
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button>
+          <Plus className="mr-2 h-4 w-4" />
+          Tambah Siswa
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[500px]">
+        <DialogHeader>
+          <DialogTitle>Tambah Siswa Baru</DialogTitle>
+          <DialogDescription>
+            Masukkan informasi siswa baru.
+          </DialogDescription>
+        </DialogHeader>
+        <form onSubmit={handleSubmit}>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="nama" className="text-right">
+                Nama Lengkap
+              </Label>
+              <Input
+                id="nama"
+                placeholder="Nama lengkap siswa"
+                className="col-span-3"
+                required
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="nis" className="text-right">
+                NIS
+              </Label>
+              <Input
+                id="nis"
+                placeholder="Nomor Induk Siswa"
+                className="col-span-3"
+                required
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="kelas" className="text-right">
+                Kelas
+              </Label>
+              <Select>
+                <SelectTrigger className="col-span-3">
+                  <SelectValue placeholder="Pilih kelas" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="X-A">X-A</SelectItem>
+                  <SelectItem value="X-B">X-B</SelectItem>
+                  <SelectItem value="XI-IPA-1">XI-IPA-1</SelectItem>
+                  <SelectItem value="XI-IPA-2">XI-IPA-2</SelectItem>
+                  <SelectItem value="XII-IPA-1">XII-IPA-1</SelectItem>
+                  <SelectItem value="XII-IPA-2">XII-IPA-2</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="jenisKelamin" className="text-right">
+                Jenis Kelamin
+              </Label>
+              <Select>
+                <SelectTrigger className="col-span-3">
+                  <SelectValue placeholder="Pilih jenis kelamin" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="L">Laki-laki</SelectItem>
+                  <SelectItem value="P">Perempuan</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="tanggalLahir" className="text-right">
+                Tanggal Lahir
+              </Label>
+              <Input
+                id="tanggalLahir"
+                type="date"
+                className="col-span-3"
+                required
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="alamat" className="text-right">
+                Alamat
+              </Label>
+              <Textarea
+                id="alamat"
+                placeholder="Alamat lengkap"
+                className="col-span-3"
+                required
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="noTelepon" className="text-right">
+                No. Telepon
+              </Label>
+              <Input
+                id="noTelepon"
+                placeholder="Nomor telepon"
+                className="col-span-3"
+                required
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="email" className="text-right">
+                Email
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="Email siswa"
+                className="col-span-3"
+                required
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+              Batal
+            </Button>
+            <Button type="submit">Simpan</Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  )
+}

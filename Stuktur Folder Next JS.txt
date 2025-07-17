@@ -1,0 +1,82 @@
+D:.
+├── app
+│   ├── favicon.ico
+│   ├── globals.css
+│   ├── layout.tsx
+│   ├── auth
+│   │   ├── login
+│   │   │   └── page.tsx
+│   │   └── register
+│   │       └── page.tsx
+│   └── dashboard
+│       ├── page.tsx
+│       ├── kelas
+│       │   └── page.tsx
+│       ├── pelanggaran
+│       │   ├── page.tsx
+│       │   └── [id]
+│       │       └── page.tsx
+│       └── siswa
+│           └── page.tsx
+│
+├── components
+│   ├── Dashboard
+│   │   ├── BirthYearDistribution.tsx
+│   │   ├── GenderRatioChart.tsx
+│   │   ├── SiswaChart.tsx
+│   │   ├── StatCard.tsx
+│   │   ├── TingkatPelanggaran.tsx
+│   │   ├── TipePelanggaran.tsx
+│   │   ├── TopPelanggaran.tsx
+│   │   └── TrenPelanggaran.tsx
+│   │
+│   ├── Kelas
+│   │   ├── AddKelasDialog.tsx
+│   │   ├── EditKelasDialog.tsx
+│   │   └── KelasTable.tsx
+│   │
+│   ├── Layout
+│   │   ├── AppLayout.tsx
+│   │   ├── DeleteDialog.tsx
+│   │   ├── FormFields.tsx
+│   │   ├── Sidebar.tsx
+│   │   ├── Table.tsx
+│   │   └── Topbar.tsx
+│   │
+│   ├── Pelanggaran
+│   │   ├── AddPelanggaranDialog.tsx
+│   │   ├── EditPelanggaranDialog.tsx
+│   │   ├── ExportTabel.tsx
+│   │   ├── FilterTable.tsx
+│   │   ├── PelanggaranTable.tsx
+│   │   └── Detail
+│   │       ├── BuktiPelanggaran.tsx
+│   │       ├── InfoSiswa.tsx
+│   │       └── TindakanDiambil.tsx
+│   │
+│   ├── Siswa
+│   │   ├── AddSiswaDialog.tsx
+│   │   ├── EditSiswaDialog.tsx
+│   │   └── SiswaTable.tsx
+│   │
+│   └── ui
+│       ├── avatar.tsx
+│       ├── badge.tsx
+│       ├── button.tsx
+│       ├── card.tsx
+│       ├── command.tsx
+│       ├── dialog.tsx
+│       ├── dropdown-menu.tsx
+│       ├── input.tsx
+│       ├── label.tsx
+│       ├── popover.tsx
+│       ├── progress.tsx
+│       ├── select.tsx
+│       ├── separator.tsx
+│       ├── sheet.tsx
+│       ├── table.tsx
+│       └── textarea.tsx
+│
+└── lib
+    ├── api.ts
+    └── utils.ts
