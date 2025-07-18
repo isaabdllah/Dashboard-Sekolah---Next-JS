@@ -43,7 +43,7 @@ export function Sidebar() {
         <div className="flex h-16 shrink-0 items-center">
           <BookOpen className="h-8 w-8 text-blue-600" />
           <span className="ml-2 text-xl font-bold text-gray-900">
-            Dashboard Sekolah
+            SMKN 9 KOLAKA
           </span>
         </div>
         <nav className="flex flex-1 flex-col">

@@ -4,6 +4,8 @@ import { useState, useEffect } from "react"
 import { AppLayout } from "@/components/Layout/AppLayout"
 import { PelanggaranTable } from "@/components/Pelanggaran/PelanggaranTable"
 import { AddPelanggaranDialog } from "@/components/Pelanggaran/AddPelanggaranDialog"
+import { ExportTabel } from "@/components/Pelanggaran/ExportTabel"
+import { FilterTable } from "@/components/Pelanggaran/FilterTable"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -15,6 +17,14 @@ export default function PelanggaranPage() {
   const [filteredPelanggaran, setFilteredPelanggaran] = useState<Pelanggaran[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
+  const [currentFilters, setCurrentFilters] = useState({
+    dateRange: { start: '', end: '' },
+    kelas: '',
+    tingkatPelanggaran: '',
+    jenisPelanggaran: '',
+    status: '',
+    siswa: ''
+  })
 
   const loadPelanggaran = async () => {
     try {
@@ -50,12 +60,12 @@ export default function PelanggaranPage() {
     loadPelanggaran() // Refresh data after adding
   }
 
-  const handleFilter = () => {
-    console.log("Filter pelanggaran")
+  const handleFilterChange = (filteredData: Pelanggaran[]) => {
+    setFilteredPelanggaran(filteredData)
   }
 
-  const handleExport = () => {
-    console.log("Export pelanggaran")
+  const handleFiltersChange = (filters: any) => {
+    setCurrentFilters(filters)
   }
 
   if (loading) {
@@ -79,10 +89,7 @@ export default function PelanggaranPage() {
             </p>
           </div>
           <div className="flex space-x-2">
-            <Button variant="outline" onClick={handleExport}>
-              <Download className="mr-2 h-4 w-4" />
-              Export
-            </Button>
+            <ExportTabel data={filteredPelanggaran} filteredData={filteredPelanggaran} />
             <AddPelanggaranDialog onDataChanged={loadPelanggaran} />
           </div>
         </div>
@@ -103,10 +110,12 @@ export default function PelanggaranPage() {
                   className="pl-8"
                 />
               </div>
-              <Button variant="outline" onClick={handleFilter}>
-                <Filter className="mr-2 h-4 w-4" />
-                Filter
-              </Button>
+              <FilterTable 
+                data={pelanggaran}
+                onFilterChange={handleFilterChange}
+                currentFilters={currentFilters}
+                onFiltersChange={handleFiltersChange}
+              />
             </div>
           </CardHeader>
           <CardContent>

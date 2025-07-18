@@ -39,7 +39,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>Login Dashboard Sekolah</CardTitle>
+          <CardTitle>Login SMKN 9 KOLAKA</CardTitle>
           <CardDescription>
             Masukkan email dan password untuk mengakses dashboard
           </CardDescription>

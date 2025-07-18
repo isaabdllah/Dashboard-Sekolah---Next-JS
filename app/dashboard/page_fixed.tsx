@@ -49,7 +49,7 @@ export default function DashboardPage() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
           <p className="text-muted-foreground">
-            Selamat datang di Dashboard Sekolah
+            Selamat datang di Dashboard SMKN 9 KOLAKA
           </p>
         </div>
 

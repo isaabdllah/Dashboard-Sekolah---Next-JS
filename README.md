@@ -1,4 +1,4 @@
-# 🏫 Dashboard Sekolah - Tutorial Instalasi & Penggunaan
+# 🏫 SMKN 9 KOLAKA - Dashboard Manajemen Sekolah
 
 Dashboard manajemen sekolah modern dengan sistem CRUD lengkap, built dengan Next.js 14 + TypeScript + Prisma.
 
@@ -182,4 +182,4 @@ npm run dev -- -p 3001
 
 ---
 
-**Dashboard Sekolah - Sistem Manajemen Sekolah Modern** 🎓
+**SMKN 9 KOLAKA - Dashboard Manajemen Sekolah** 🎓

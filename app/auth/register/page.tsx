@@ -58,7 +58,7 @@ export default function RegisterPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>Daftar Dashboard Sekolah</CardTitle>
+          <CardTitle>Daftar SMKN 9 KOLAKA</CardTitle>
           <CardDescription>
             Buat akun baru untuk mengakses dashboard
           </CardDescription>
