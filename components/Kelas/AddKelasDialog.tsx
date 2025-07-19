@@ -34,6 +34,7 @@ export function AddKelasDialog({ onKelasAdded }: AddKelasDialogProps) {
     nama: '',
     tingkat: '',
     jurusan: '',
+    paralel: '',
     waliKelas: ''
   })
 
@@ -46,6 +47,7 @@ export function AddKelasDialog({ onKelasAdded }: AddKelasDialogProps) {
         nama: formData.nama,
         tingkat: formData.tingkat,
         jurusan: formData.jurusan,
+        paralel: formData.paralel,
         waliKelas: formData.waliKelas
       })
       
@@ -54,6 +56,7 @@ export function AddKelasDialog({ onKelasAdded }: AddKelasDialogProps) {
         nama: '',
         tingkat: '',
         jurusan: '',
+        paralel: '',
         waliKelas: ''
       })
       
@@ -139,6 +142,19 @@ export function AddKelasDialog({ onKelasAdded }: AddKelasDialogProps) {
                   </SelectContent>
                 </Select>
               </div>
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="paralel" className="text-right">
+                Paralel
+              </Label>
+              <Input
+                id="paralel"
+                value={formData.paralel}
+                onChange={(e) => handleInputChange('paralel', e.target.value)}
+                className="col-span-3"
+                placeholder="e.g., 1, 2, 3"
+                required
+              />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="waliKelas" className="text-right">

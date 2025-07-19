@@ -46,6 +46,7 @@ export interface Kelas {
   nama: string
   tingkat: string
   jurusan?: string
+  paralel?: string
   waliKelas: string
   jumlahSiswa?: number
   siswa?: Siswa[]

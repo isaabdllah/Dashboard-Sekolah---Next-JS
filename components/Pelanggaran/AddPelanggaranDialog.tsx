@@ -39,7 +39,7 @@ export function AddPelanggaranDialog({ onDataChanged }: AddPelanggaranDialogProp
     tingkatPelanggaran: '',
     deskripsi: '',
     tindakan: '',
-    status: 'Pending'
+    status: 'PENDING'
   })
 
   // Fetch siswa data when dialog opens
@@ -73,10 +73,10 @@ export function AddPelanggaranDialog({ onDataChanged }: AddPelanggaranDialogProp
         siswaId: formData.siswaId,
         tanggal: formData.tanggal,
         jenisPelanggaran: formData.jenisPelanggaran,
-        tingkatPelanggaran: formData.tingkatPelanggaran.toUpperCase() as 'RINGAN' | 'SEDANG' | 'BERAT',
+        tingkatPelanggaran: formData.tingkatPelanggaran as 'RINGAN' | 'SEDANG' | 'BERAT',
         deskripsi: formData.deskripsi,
         tindakan: formData.tindakan,
-        status: formData.status.toUpperCase() as 'PENDING' | 'PROSES' | 'SELESAI'
+        status: formData.status as 'PENDING' | 'PROSES' | 'SELESAI'
       })
       
       // Reset form and close dialog
@@ -87,7 +87,7 @@ export function AddPelanggaranDialog({ onDataChanged }: AddPelanggaranDialogProp
         tingkatPelanggaran: '',
         deskripsi: '',
         tindakan: '',
-        status: 'Pending'
+        status: 'PENDING'
       })
       setOpen(false)
       
@@ -177,9 +177,9 @@ export function AddPelanggaranDialog({ onDataChanged }: AddPelanggaranDialogProp
                   <SelectValue placeholder="Pilih tingkat pelanggaran" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Ringan">Ringan</SelectItem>
-                  <SelectItem value="Sedang">Sedang</SelectItem>
-                  <SelectItem value="Berat">Berat</SelectItem>
+                  <SelectItem value="RINGAN">Ringan</SelectItem>
+                  <SelectItem value="SEDANG">Sedang</SelectItem>
+                  <SelectItem value="BERAT">Berat</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -218,9 +218,9 @@ export function AddPelanggaranDialog({ onDataChanged }: AddPelanggaranDialogProp
                   <SelectValue placeholder="Pilih status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Pending">Pending</SelectItem>
-                  <SelectItem value="Proses">Proses</SelectItem>
-                  <SelectItem value="Selesai">Selesai</SelectItem>
+                  <SelectItem value="PENDING">Pending</SelectItem>
+                  <SelectItem value="PROSES">Proses</SelectItem>
+                  <SelectItem value="SELESAI">Selesai</SelectItem>
                 </SelectContent>
               </Select>
             </div>

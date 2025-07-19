@@ -6,6 +6,7 @@ import { AppLayout } from "@/components/Layout/AppLayout"
 import { InfoSiswa } from "@/components/Pelanggaran/Detail/InfoSiswa"
 import { TindakanDiambil } from "@/components/Pelanggaran/Detail/TindakanDiambil"
 import { BuktiPelanggaran } from "@/components/Pelanggaran/Detail/BuktiPelanggaran"
+import { EditPelanggaranDialog } from "@/components/Pelanggaran/EditPelanggaranDialog"
 import { Button } from "@/components/ui/button"
 import { api, Pelanggaran } from "@/lib/api"
 import { ArrowLeft, Edit, Trash2 } from "lucide-react"
@@ -15,21 +16,10 @@ export default function PelanggaranDetailPage() {
   const router = useRouter()
   const [pelanggaran, setPelanggaran] = useState<Pelanggaran | null>(null)
   const [loading, setLoading] = useState(true)
+  const [editOpen, setEditOpen] = useState(false)
+  const [deleteLoading, setDeleteLoading] = useState(false)
 
   useEffect(() => {
-    const loadPelanggaran = async () => {
-      try {
-        if (params.id) {
-          const data = await api.getPelanggaranById(params.id as string)
-          setPelanggaran(data)
-        }
-      } catch (error) {
-        console.error("Error loading pelanggaran:", error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
     loadPelanggaran()
   }, [params.id])
 
@@ -38,11 +28,46 @@ export default function PelanggaranDetailPage() {
   }
 
   const handleEdit = () => {
-    console.log("Edit pelanggaran")
+    setEditOpen(true)
   }
 
-  const handleDelete = () => {
-    console.log("Delete pelanggaran")
+  const handleEditSuccess = () => {
+    setEditOpen(false)
+    // Reload pelanggaran data
+    loadPelanggaran()
+  }
+
+  const loadPelanggaran = async () => {
+    try {
+      if (params.id) {
+        setLoading(true)
+        const data = await api.getPelanggaranById(params.id as string)
+        setPelanggaran(data)
+      }
+    } catch (error) {
+      console.error("Error loading pelanggaran:", error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleDelete = async () => {
+    if (!pelanggaran) return
+    
+    if (!confirm('Apakah Anda yakin ingin menghapus pelanggaran ini?')) {
+      return
+    }
+
+    setDeleteLoading(true)
+    try {
+      await api.deletePelanggaran(pelanggaran.id)
+      router.push('/dashboard/pelanggaran')
+    } catch (error) {
+      console.error('Error deleting pelanggaran:', error)
+      alert('Gagal menghapus pelanggaran. Silakan coba lagi.')
+    } finally {
+      setDeleteLoading(false)
+    }
   }
 
   if (loading) {
@@ -86,9 +111,9 @@ export default function PelanggaranDetailPage() {
               <Edit className="mr-2 h-4 w-4" />
               Edit
             </Button>
-            <Button variant="destructive" onClick={handleDelete}>
+            <Button variant="destructive" onClick={handleDelete} disabled={deleteLoading}>
               <Trash2 className="mr-2 h-4 w-4" />
-              Hapus
+              {deleteLoading ? 'Menghapus...' : 'Hapus'}
             </Button>
           </div>
         </div>
@@ -103,6 +128,13 @@ export default function PelanggaranDetailPage() {
           </div>
         </div>
       </div>
+
+      <EditPelanggaranDialog
+        pelanggaran={pelanggaran}
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        onPelanggaranUpdated={handleEditSuccess}
+      />
     </AppLayout>
   )
 }

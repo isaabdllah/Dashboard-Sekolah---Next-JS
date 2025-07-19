@@ -71,11 +71,11 @@ export function PelanggaranTable({ data, onDataChanged }: PelanggaranTableProps)
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Selesai':
+      case 'SELESAI':
         return 'bg-green-100 text-green-800'
-      case 'Proses':
+      case 'PROSES':
         return 'bg-yellow-100 text-yellow-800'
-      case 'Pending':
+      case 'PENDING':
         return 'bg-red-100 text-red-800'
       default:
         return 'bg-gray-100 text-gray-800'
@@ -84,14 +84,40 @@ export function PelanggaranTable({ data, onDataChanged }: PelanggaranTableProps)
 
   const getTingkatColor = (tingkat: string) => {
     switch (tingkat) {
-      case 'Ringan':
+      case 'RINGAN':
         return 'bg-green-100 text-green-800'
-      case 'Sedang':
+      case 'SEDANG':
         return 'bg-yellow-100 text-yellow-800'
-      case 'Berat':
+      case 'BERAT':
         return 'bg-red-100 text-red-800'
       default:
         return 'bg-gray-100 text-gray-800'
+    }
+  }
+
+  const getDisplayStatus = (status: string) => {
+    switch (status) {
+      case 'PENDING':
+        return 'Pending'
+      case 'PROSES':
+        return 'Proses'
+      case 'SELESAI':
+        return 'Selesai'
+      default:
+        return status
+    }
+  }
+
+  const getDisplayTingkat = (tingkat: string) => {
+    switch (tingkat) {
+      case 'RINGAN':
+        return 'Ringan'
+      case 'SEDANG':
+        return 'Sedang'
+      case 'BERAT':
+        return 'Berat'
+      default:
+        return tingkat
     }
   }
 
@@ -123,12 +149,12 @@ export function PelanggaranTable({ data, onDataChanged }: PelanggaranTableProps)
             <TableCell>{pelanggaran.jenisPelanggaran}</TableCell>
             <TableCell>
               <Badge className={getTingkatColor(pelanggaran.tingkatPelanggaran)}>
-                {pelanggaran.tingkatPelanggaran}
+                {getDisplayTingkat(pelanggaran.tingkatPelanggaran)}
               </Badge>
             </TableCell>
             <TableCell>
               <Badge className={getStatusColor(pelanggaran.status)}>
-                {pelanggaran.status}
+                {getDisplayStatus(pelanggaran.status)}
               </Badge>
             </TableCell>
             <TableCell>
