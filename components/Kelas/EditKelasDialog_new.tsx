@@ -135,10 +135,11 @@ export function EditKelasDialog({ kelas, open, onOpenChange, onKelasUpdated }: E
                     <SelectValue placeholder="Pilih jurusan" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="IPA">IPA</SelectItem>
-                    <SelectItem value="IPS">IPS</SelectItem>
-                    <SelectItem value="MIPA">MIPA</SelectItem>
-                    <SelectItem value="BAHASA">BAHASA</SelectItem>
+                    <SelectItem value="GP">GP (Geologi Pertambangan)</SelectItem>
+                    <SelectItem value="TAB">TAB (Teknik Alat Berat)</SelectItem>
+                    <SelectItem value="TKJ">TKJ (Teknik Komputer dan Jaringan)</SelectItem>
+                    <SelectItem value="TEI">TEI (Teknik Elektronika Industri)</SelectItem>
+                    <SelectItem value="MPLB">MPLB (Manajemen Perkantoran dan Layanan Bisnis)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

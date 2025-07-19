@@ -32,41 +32,81 @@ async function main() {
 
   console.log('👤 Users created:', { adminUser, guruUser })
 
-  // Create kelas
+  // Create kelas (SMK dengan struktur tingkat + jurusan + paralel)
   const kelas1 = await prisma.kelas.upsert({
-    where: { nama: 'XII IPA 1' },
+    where: { nama: 'XII TKJ 1' },
     update: {},
     create: {
-      nama: 'XII IPA 1',
+      nama: 'XII TKJ 1',
       tingkat: 'XII',
-      jurusan: 'IPA',
+      jurusan: 'TKJ',
+      paralel: '1',
       waliKelas: 'Pak Agus Setiawan',
     },
   })
 
   const kelas2 = await prisma.kelas.upsert({
-    where: { nama: 'XI IPS 2' },
+    where: { nama: 'XI GP 1' },
     update: {},
     create: {
-      nama: 'XI IPS 2',
+      nama: 'XI GP 1',
       tingkat: 'XI',
-      jurusan: 'IPS',
+      jurusan: 'GP',
+      paralel: '1',
       waliKelas: 'Bu Sari Indah',
     },
   })
 
   const kelas3 = await prisma.kelas.upsert({
-    where: { nama: 'X MIPA 1' },
+    where: { nama: 'X MPLB 1' },
     update: {},
     create: {
-      nama: 'X MIPA 1',
+      nama: 'X MPLB 1',
       tingkat: 'X',
-      jurusan: 'MIPA',
+      jurusan: 'MPLB',
+      paralel: '1',
       waliKelas: 'Pak Budi Santoso',
     },
   })
 
-  console.log('🏫 Kelas created:', { kelas1, kelas2, kelas3 })
+  const kelas4 = await prisma.kelas.upsert({
+    where: { nama: 'XI TAB 1' },
+    update: {},
+    create: {
+      nama: 'XI TAB 1',
+      tingkat: 'XI',
+      jurusan: 'TAB',
+      paralel: '1',
+      waliKelas: 'Bu Rina Wati',
+    },
+  })
+
+  const kelas5 = await prisma.kelas.upsert({
+    where: { nama: 'X TEI 1' },
+    update: {},
+    create: {
+      nama: 'X TEI 1',
+      tingkat: 'X',
+      jurusan: 'TEI',
+      paralel: '1',
+      waliKelas: 'Pak Dedi Kurniawan',
+    },
+  })
+
+  // Tambah kelas paralel untuk demonstrasi
+  const kelas6 = await prisma.kelas.upsert({
+    where: { nama: 'XI TKJ 2' },
+    update: {},
+    create: {
+      nama: 'XI TKJ 2',
+      tingkat: 'XI',
+      jurusan: 'TKJ',
+      paralel: '2',
+      waliKelas: 'Bu Maya Sari',
+    },
+  })
+
+  console.log('🏫 Kelas created:', { kelas1, kelas2, kelas3, kelas4, kelas5, kelas6 })
 
   // Create siswa
   const siswa1 = await prisma.siswa.upsert({
@@ -146,11 +186,13 @@ async function main() {
 
   console.log('👨‍🎓 Siswa created:', { siswa1, siswa2, siswa3, siswa4, siswa5 })
 
-  // Create pelanggaran
+  // Create pelanggaran dengan distribusi tanggal sepanjang tahun untuk tren yang realistis
+  const currentYear = new Date().getFullYear()
+  
   const pelanggaran1 = await prisma.pelanggaran.create({
     data: {
       siswaId: siswa1.id,
-      tanggal: new Date('2024-01-15'),
+      tanggal: new Date(`${currentYear}-01-15`),
       jenisPelanggaran: 'Terlambat',
       tingkatPelanggaran: 'RINGAN',
       deskripsi: 'Terlambat masuk kelas selama 15 menit tanpa keterangan yang jelas',
@@ -162,7 +204,7 @@ async function main() {
   const pelanggaran2 = await prisma.pelanggaran.create({
     data: {
       siswaId: siswa2.id,
-      tanggal: new Date('2024-01-16'),
+      tanggal: new Date(`${currentYear}-02-16`),
       jenisPelanggaran: 'Tidak mengerjakan tugas',
       tingkatPelanggaran: 'SEDANG',
       deskripsi: 'Tidak mengerjakan PR Matematika selama 3 hari berturut-turut',
@@ -174,7 +216,7 @@ async function main() {
   const pelanggaran3 = await prisma.pelanggaran.create({
     data: {
       siswaId: siswa3.id,
-      tanggal: new Date('2024-01-17'),
+      tanggal: new Date(`${currentYear}-03-17`),
       jenisPelanggaran: 'Berkelahi',
       tingkatPelanggaran: 'BERAT',
       deskripsi: 'Berkelahi dengan teman sekelas di kantin sekolah',
@@ -186,7 +228,7 @@ async function main() {
   const pelanggaran4 = await prisma.pelanggaran.create({
     data: {
       siswaId: siswa4.id,
-      tanggal: new Date('2024-01-20'),
+      tanggal: new Date(`${currentYear}-04-20`),
       jenisPelanggaran: 'Tidak berseragam',
       tingkatPelanggaran: 'RINGAN',
       deskripsi: 'Tidak memakai seragam lengkap (tidak memakai dasi)',
@@ -198,7 +240,7 @@ async function main() {
   const pelanggaran5 = await prisma.pelanggaran.create({
     data: {
       siswaId: siswa5.id,
-      tanggal: new Date('2024-01-22'),
+      tanggal: new Date(`${currentYear}-05-22`),
       jenisPelanggaran: 'Membolos',
       tingkatPelanggaran: 'SEDANG',
       deskripsi: 'Membolos pelajaran bahasa inggris tanpa ijin',
@@ -207,19 +249,68 @@ async function main() {
     },
   })
 
-  console.log('⚠️ Pelanggaran created:', { pelanggaran1, pelanggaran2, pelanggaran3, pelanggaran4, pelanggaran5 })
+  // Tambah beberapa pelanggaran lagi untuk tren yang lebih terlihat
+  const pelanggaran6 = await prisma.pelanggaran.create({
+    data: {
+      siswaId: siswa1.id,
+      tanggal: new Date(`${currentYear}-06-10`),
+      jenisPelanggaran: 'Terlambat',
+      tingkatPelanggaran: 'RINGAN',
+      deskripsi: 'Terlambat masuk kelas kedua kalinya',
+      tindakan: 'Teguran tertulis dan peringatan',
+      status: 'SELESAI',
+    },
+  })
+
+  const pelanggaran7 = await prisma.pelanggaran.create({
+    data: {
+      siswaId: siswa3.id,
+      tanggal: new Date(`${currentYear}-07-08`),
+      jenisPelanggaran: 'Tidak berseragam',
+      tingkatPelanggaran: 'RINGAN',
+      deskripsi: 'Tidak memakai sepatu sekolah yang sesuai',
+      tindakan: 'Teguran dan diminta ganti sepatu',
+      status: 'SELESAI',
+    },
+  })
+
+  const pelanggaran8 = await prisma.pelanggaran.create({
+    data: {
+      siswaId: siswa2.id,
+      tanggal: new Date(`${currentYear}-07-19`),
+      jenisPelanggaran: 'Membolos',
+      tingkatPelanggaran: 'SEDANG',
+      deskripsi: 'Membolos pelajaran praktikum tanpa keterangan',
+      tindakan: 'Panggilan orang tua dan konseling',
+      status: 'PROSES',
+    },
+  })
+
+  console.log('⚠️ Pelanggaran created:', { pelanggaran1, pelanggaran2, pelanggaran3, pelanggaran4, pelanggaran5, pelanggaran6, pelanggaran7, pelanggaran8 })
 
   console.log('✅ Database seeded successfully!')
   console.log(`
-📋 Summary:
+📋 Summary SMKN 9 KOLAKA:
 - Users: 2 (1 Admin, 1 Guru)
-- Kelas: 3 
+- Kelas: 6 (5 Jurusan dengan kelas paralel)
 - Siswa: 5
-- Pelanggaran: 5
+- Pelanggaran: 8 (Tersebar sepanjang tahun ${currentYear})
 
-🔑 Login credentials:
-Admin: admin@sekolah.com / password123
-Guru: guru@sekolah.com / password123
+🏫 Struktur Kelas SMK:
+- Tingkat: X, XI, XII
+- Jurusan: TKJ, GP, MPLB, TAB, TEI
+- Paralel: 1, 2, 3 (sesuai kebutuhan)
+
+� Jurusan SMK:
+- TKJ (Teknik Komputer dan Jaringan)
+- GP (Geologi Pertambangan) 
+- MPLB (Manajemen Perkantoran dan Layanan Bisnis)
+- TAB (Teknik Gambar Bangunan)
+- TEI (Teknik Elektronika Industri)
+
+�🔑 Login credentials:
+- Admin: admin@sekolah.com / password123
+- Guru: guru@sekolah.com / password123
   `)
 }
 

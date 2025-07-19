@@ -138,9 +138,16 @@ npx prisma migrate dev  # Buat migration baru
 
 Setelah seed, database berisi:
 - **2 Users** (1 Admin, 1 Guru)
-- **3 Kelas** (X, XI, XII)
-- **8 Siswa** dengan data lengkap
-- **10 Pelanggaran** dengan berbagai jenis dan tingkat
+- **5 Kelas** (TKJ, GP, MPLB, TAB, TEI)
+- **5 Siswa** dengan data lengkap
+- **5 Pelanggaran** dengan berbagai jenis dan tingkat
+
+### 🏫 Jurusan SMK:
+- **TKJ**: Teknik Komputer dan Jaringan
+- **GP**: Geologi Pertambangan  
+- **MPLB**: Manajemen Perkantoran dan Layanan Bisnis
+- **TAB**: Teknik Gambar Bangunan
+- **TEI**: Teknik Elektronika Industri
 
 ## 🐛 Troubleshooting
 

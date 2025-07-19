@@ -78,9 +78,27 @@ export default function LoginPage() {
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? 'Login...' : 'Login'}
             </Button>
-            <div className="text-center text-sm text-muted-foreground">
-              <p>Demo credentials:</p>
-              <p>admin@sekolah.com / password123</p>
+            
+            <div className="text-center space-y-3">
+              <div className="text-sm text-muted-foreground">
+                <p>Demo credentials:</p>
+                <p>admin@sekolah.com / password123</p>
+              </div>
+              
+              <div className="border-t pt-3">
+                <p className="text-sm text-muted-foreground mb-2">
+                  Belum punya akun?
+                </p>
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => window.location.href = '/auth/register'}
+                  disabled={loading}
+                >
+                  Daftar Akun Baru
+                </Button>
+              </div>
             </div>
           </form>
         </CardContent>

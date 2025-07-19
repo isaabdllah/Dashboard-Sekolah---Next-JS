@@ -30,8 +30,9 @@ export const updateSiswaSchema = siswaSchema.partial()
 // Kelas schemas
 export const kelasSchema = z.object({
   nama: z.string().min(2, 'Nama kelas minimal 2 karakter'),
-  tingkat: z.string().min(1, 'Tingkat harus diisi'),
-  jurusan: z.string().optional(),
+  tingkat: z.enum(['X', 'XI', 'XII']),
+  jurusan: z.enum(['TKJ', 'GP', 'TAB', 'TEI', 'MPLB']),
+  paralel: z.string().min(1, 'Paralel harus diisi'),
   waliKelas: z.string().min(2, 'Nama wali kelas minimal 2 karakter'),
 })
 

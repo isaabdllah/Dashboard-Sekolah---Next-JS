@@ -24,11 +24,11 @@ export function TrenPelanggaran({ refreshKey }: TrenPelanggaranProps) {
         // Get all violations for trend analysis
         const violations = await api.getPelanggaran()
         
-        // Generate monthly trend data for the last 6 months
+        // Generate monthly trend data for the last 12 months
         const currentDate = new Date()
         const monthlyData: TrendData[] = []
         
-        for (let i = 5; i >= 0; i--) {
+        for (let i = 11; i >= 0; i--) {
           const date = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1)
           const monthName = date.toLocaleDateString('id-ID', { month: 'short' })
           const year = date.getFullYear()
@@ -49,14 +49,20 @@ export function TrenPelanggaran({ refreshKey }: TrenPelanggaranProps) {
         setData(monthlyData)
       } catch (error) {
         console.error('Error fetching trend data:', error)
-        // Fallback data
+        // Fallback data with proper month sequence
         const fallbackData = [
+          { bulan: 'Jan', jumlah: 5 },
           { bulan: 'Feb', jumlah: 0 },
           { bulan: 'Mar', jumlah: 0 },
           { bulan: 'Apr', jumlah: 0 },
           { bulan: 'Mei', jumlah: 0 },
           { bulan: 'Jun', jumlah: 0 },
           { bulan: 'Jul', jumlah: 0 },
+          { bulan: 'Agu', jumlah: 0 },
+          { bulan: 'Sep', jumlah: 0 },
+          { bulan: 'Okt', jumlah: 0 },
+          { bulan: 'Nov', jumlah: 0 },
+          { bulan: 'Des', jumlah: 0 },
         ]
         setData(fallbackData)
       } finally {

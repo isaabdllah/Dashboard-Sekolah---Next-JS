@@ -146,12 +146,12 @@ export function AddSiswaDialog({ onSiswaAdded }: AddSiswaDialogProps) {
                   <SelectValue placeholder="Pilih kelas" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="X-A">X-A</SelectItem>
-                  <SelectItem value="X-B">X-B</SelectItem>
-                  <SelectItem value="XI-IPA-1">XI-IPA-1</SelectItem>
-                  <SelectItem value="XI-IPA-2">XI-IPA-2</SelectItem>
-                  <SelectItem value="XII-IPA-1">XII-IPA-1</SelectItem>
-                  <SelectItem value="XII-IPA-2">XII-IPA-2</SelectItem>
+                  <SelectItem value="X-GP-1">X-GP-1</SelectItem>
+                  <SelectItem value="X-TAB-1">X-TAB-1</SelectItem>
+                  <SelectItem value="XI-TKJ-1">XI-TKJ-1</SelectItem>
+                  <SelectItem value="XI-TEI-1">XI-TEI-1</SelectItem>
+                  <SelectItem value="XII-GP-1">XII-GP-1</SelectItem>
+                  <SelectItem value="XII-MPLB-1">XII-MPLB-1</SelectItem>
                 </SelectContent>
               </Select>
             </div>

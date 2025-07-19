@@ -37,14 +37,15 @@ model Siswa {
 }
 
 model Kelas {
-  id        String   @id @default(cuid())
-  nama      String   @unique
-  tingkat   String
-  jurusan   String?
+  id        String        @id @default(cuid())
+  nama      String        @unique
+  tingkat   TingkatKelas
+  jurusan   JurusanSMK
+  paralel   String        // "1", "2", "3" untuk kelas paralel
   waliKelas String
   siswa     Siswa[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
 }
 
 model Pelanggaran {
@@ -70,6 +71,20 @@ enum Role {
 enum JenisKelamin {
   L
   P
+}
+
+enum TingkatKelas {
+  X
+  XI
+  XII
+}
+
+enum JurusanSMK {
+  TKJ   // Teknik Komputer dan Jaringan
+  GP    // Geologi Pertambangan
+  TAB   // Teknik Gambar Bangunan
+  TEI   // Teknik Elektronika Industri
+  MPLB  // Manajemen Perkantoran dan Layanan Bisnis
 }
 
 enum TingkatPelanggaran {
